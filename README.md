@@ -30,13 +30,16 @@ todo: Add example
 
 ## 3. Learning Methodology
 
-Since the architecture relies on discrete branching (non-differentiable `IF/ELSE` logic) and integer arithmetic, standard Backpropagation is not directly applicable. EGN utilizes a hybrid optimization strategy:
+Since the architecture relies on discrete branching (non-differentiable `IF/ELSE` logic) and integer arithmetic, standard Backpropagation is not directly applicable. EGN utilizes a multi-stage optimization strategy:
 
-* **Structural Evolution (Topology Search):**
-    Uses Genetic Algorithms or stochastic search to determine the graph structure. This involves mutating `next_true` / `next_false` pointers to rewire the network, allowing the dynamic discovery of complex control flows like loops and subroutines.
+* **Structural Evolution (Exploratory Overgrowth):**
+    During the initial training phase, the graph is allowed to expand dynamically, creating redundant nodes and branches. This "overgrowth" maximizes the search space, preventing the model from getting stuck in local minima while searching for complex logic patterns.
 
 * **Discrete Parameter Optimization:**
-    Algorithms designed for non-convex, discrete spaces (e.g., Evolutionary Strategies or Simulated Annealing) are used to tune the integer weights and thresholds ($w_a, w_b, T$).
+    Algorithms designed for non-convex spaces (e.g., Evolutionary Strategies) are used to fine-tune the integer weights and thresholds ($w_a, w_b, T$) within the active nodes.
 
-* **Program Synthesis Paradigm:**
-    Particularly for reasoning tasks, the training process is akin to "writing code." The system induces algorithms by searching for the most concise logic graph that satisfies the input-output examples, performing Inductive Logic Programming on the fly.
+* **Graph Pruning & Collapsing (Final Optimization):**
+    Once the logical solution is found, a separate optimization pass is applied to "collapse" the graph. This step involves:
+    1.  **Dead Code Elimination:** Removing nodes that are never reached by valid inputs.
+    2.  **Branch Merging:** Identifying and combining duplicate sub-trees (common subexpression elimination).
+    3.  **Logic Simplification:** Converting complex chains of weak classifiers into fewer, stronger nodes.
