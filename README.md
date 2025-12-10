@@ -13,14 +13,20 @@ The fundamental atomic unit of an EGN is not a neuron, but a **Dual-Input Logic 
 
 Mathematically, a single cell $C_i$ computes a decision boundary based on a linear projection of two inputs, enabling relational reasoning (gradients, differences, or sums):
 
-```
-{Activation} = (w_A \cdot x_A) + (w_B \cdot x_B)
-```
+$$
+\text{Activation} = (w_A \cdot x_A) + (w_B \cdot x_B)
+$$
 
-The control flow is determined by:
+The control flow decision (Next Node Pointer):
 
-$$\text{Next\_Node} = \begin{cases} \text{Child}_{\text{True}} & \text{if } \text{Activation} > \text{Threshold} \\ \text{Child}_{\text{False}} & \text{otherwise} \end{cases}$$
+$$N_{next} = \begin{cases} N_{true} & \text{if } S > T \\ N_{false} & \text{otherwise} \end{cases}$$
 
+Where:
+* $S$: Calculated activation value.
+* $T$: Learned threshold constant.
+* $N_{true} / N_{false}$: Indices of the next nodes in the graph.
+
+  
 ### 2.1 Memory Layout (C-Struct Specification)
 The graph is serialized in memory as a flat array of structures, optimizing for L1/L2 cache locality and branch prediction on standard x86/ARM architectures.
 
